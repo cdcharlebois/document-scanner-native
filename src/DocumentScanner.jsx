@@ -1,9 +1,17 @@
 import { Component, createElement } from "react";
+import { View } from "react-native";
+import Scanner from "react-native-document-scanner";
 
-import { HelloWorld } from "./components/HelloWorld";
+// import { HelloWorld } from "./components/HelloWorld";
 
-export class DocumentScanner extends Component {
-    render() {
-        return <HelloWorld name={this.props.yourName} style={this.props.style} />;
+export const DocumentScanner = () => {
+    const handlePictureTaken = (data) => {
+        console.log(data);
     }
+
+    return (
+        <View>
+            <Scanner overlayColor={"tomato"} onPictureTaken={handlePictureTaken}/>
+        </View>
+    )
 }
