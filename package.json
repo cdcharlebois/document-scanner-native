@@ -9,7 +9,7 @@
     "node": ">=12"
   },
   "config": {
-    "projectPath": "./tests/testProject/"
+    "projectPath": "/Volumes/[C] Windows 10/MxProjects/DocumentScannerTest-main"
   },
   "packagePath": "mendix",
   "scripts": {
