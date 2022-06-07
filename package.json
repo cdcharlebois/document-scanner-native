@@ -27,5 +27,7 @@
   "devDependencies": {
     "@mendix/pluggable-widgets-tools": "^9.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "react-native-document-scanner": "^1.4.2"
+  }
 }
