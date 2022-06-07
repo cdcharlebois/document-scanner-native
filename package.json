@@ -1,0 +1,31 @@
+{
+  "name": "documentscanner",
+  "widgetName": "DocumentScanner",
+  "version": "1.0.0",
+  "description": "Mendix wrapper around https://github.com/Michaelvilleneuve/react-native-document-scanner",
+  "copyright": "2020 Mendix Technology BV",
+  "author": "Conner Charlebois",
+  "engines": {
+    "node": ">=12"
+  },
+  "config": {
+    "projectPath": "./tests/testProject/"
+  },
+  "packagePath": "mendix",
+  "scripts": {
+    "start": "pluggable-widgets-tools start:native",
+    "build": "pluggable-widgets-tools build:native",
+    "lint": "pluggable-widgets-tools lint",
+    "lint:fix": "pluggable-widgets-tools lint:fix",
+    "prerelease": "npm run lint",
+    "release": "pluggable-widgets-tools release:native"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Conner Charlebois/documentscanner/issues"
+  },
+  "devDependencies": {
+    "@mendix/pluggable-widgets-tools": "^9.0.0"
+  },
+  "dependencies": {}
+}
