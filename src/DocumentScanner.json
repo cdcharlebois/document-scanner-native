@@ -1,5 +1,6 @@
 {
     "nativeDependencies": {
-        "react-native-document-scanner": "^1.4.2"
+        "react-native-rectangle-scanner": "1.4.2",
+        "prop-types": "15.8.1"
     }
 }

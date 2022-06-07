@@ -28,6 +28,8 @@
     "@mendix/pluggable-widgets-tools": "^9.0.0"
   },
   "dependencies": {
-    "react-native-document-scanner": "^1.4.2"
+    "prop-types": "^15.8.1",
+    "react-native-document-scanner": "^1.4.2",
+    "react-native-rectangle-scanner": "^1.0.10"
   }
 }
