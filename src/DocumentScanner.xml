@@ -8,6 +8,17 @@
     <icon/>
     <properties>
         <propertyGroup caption="General">
+            <property key="saveImageAction" type="action">
+              <caption>Save Action</caption>
+              <description>This nanoflow will be called when the image is captured.</description>
+            </property>
+            <property key="uriAttribute" type="attribute" required="true">
+              <caption>URI</caption>
+              <description>The string attribute to store the URI of the new file, prior to calling the Save Action.</description>
+              <attributeTypes>
+                <attributeType name="String" />
+              </attributeTypes>
+            </property>
             <property key="yourName" type="string" required="false">
                 <caption>Name</caption>
                 <description>Enter your name</description>
