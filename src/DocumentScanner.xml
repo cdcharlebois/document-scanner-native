@@ -26,11 +26,6 @@
                 <attributeType name="String" />
               </attributeTypes>
             </property>
-            <property key="thresholdExpr" type="expression" defaultValue="2000">
-              <caption>Threshold</caption>
-              <description>At most, capture one picture every N milliseconds. (2000 is the default)</description>
-              <returnType type="Integer" />
-            </property>
         </propertyGroup>
     </properties>
 </widget>

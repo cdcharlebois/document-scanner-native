@@ -9,15 +9,12 @@ const DocumentScannerComponent = ({
     saveImageAction,
     uriAttribute,
     uriAttributeUncropped,
-    thresholdExpr,
     isFocused
 }) => {
     const camera = useRef();
     const [rectangleDetected, setRectangleDetected] = useState(null);
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
-
-    const threshold = thresholdExpr.value.toNumber() || 2000; // only take maximum of one picture every 1s
 
     const getPreviewSize = () => {
         const dimensions = Dimensions.get("window");
