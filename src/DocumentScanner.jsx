@@ -1,20 +1,16 @@
 import { Component, createElement, useState, useRef } from "react";
-import { View, Dimensions } from "react-native";
-import Scanner, { RectangleOverlay } from "react-native-rectangle-scanner";
+import { View, Dimensions, Animated } from "react-native";
+import Scanner, { RectangleOverlay, FlashAnimation } from "react-native-rectangle-scanner";
 import { withNavigationFocus } from "react-navigation";
 import PropTypes from "prop-types";
 console.log(!!PropTypes);
 
-const DocumentScannerComponent = ({
-    saveImageAction,
-    uriAttribute,
-    uriAttributeUncropped,
-    isFocused
-}) => {
+const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeUncropped, isFocused }) => {
     const camera = useRef();
     const [rectangleDetected, setRectangleDetected] = useState(null);
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
+    const [flashOpacity] = useState(new Animated.Value(0));
 
     const getPreviewSize = () => {
         const dimensions = Dimensions.get("window");
@@ -44,6 +40,15 @@ const DocumentScannerComponent = ({
     };
     const takePicture = () => {
         camera.current.capture();
+        triggerFlashAnimation();
+    };
+    const triggerFlashAnimation = () => {
+        Animated.sequence([
+            Animated.timing(flashOpacity, { toValue: 0.7, duration: 100, useNativeDriver:true }),
+            Animated.timing(flashOpacity, { toValue: 0, duration: 50, useNativeDriver:true }),
+            Animated.timing(flashOpacity, { toValue: 0.5, delay: 100, duration: 120, useNativeDriver:true }),
+            Animated.timing(flashOpacity, { toValue: 0, duration: 90, useNativeDriver:true })
+        ]).start();
     };
     // const handlePictureTaken = () => {
     //     //something?
@@ -84,6 +89,7 @@ const DocumentScannerComponent = ({
                     onDetectedCapture={takePicture}
                 />
             ) : null}
+            <FlashAnimation overlayFlashOpacity={flashOpacity} />
         </View>
     ) : null;
 };
