@@ -13,15 +13,23 @@
               <description>This nanoflow will be called when the image is captured.</description>
             </property>
             <property key="uriAttribute" type="attribute" required="true">
-              <caption>URI</caption>
+              <caption>URI (Cropped)</caption>
               <description>The string attribute to store the URI of the new file, prior to calling the Save Action.</description>
               <attributeTypes>
                 <attributeType name="String" />
               </attributeTypes>
             </property>
-            <property key="yourName" type="string" required="false">
-                <caption>Name</caption>
-                <description>Enter your name</description>
+            <property key="uriAttributeUncropped" type="attribute" required="true">
+              <caption>URI (Uncropped)</caption>
+              <description>The string attribute to store the URI of the new file, prior to calling the Save Action.</description>
+              <attributeTypes>
+                <attributeType name="String" />
+              </attributeTypes>
+            </property>
+            <property key="thresholdExpr" type="expression" defaultValue="2000">
+              <caption>Threshold</caption>
+              <description>At most, capture one picture every N milliseconds. (2000 is the default)</description>
+              <returnType type="Integer" />
             </property>
         </propertyGroup>
     </properties>

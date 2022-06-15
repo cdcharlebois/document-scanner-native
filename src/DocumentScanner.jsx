@@ -1,17 +1,23 @@
 import { Component, createElement, useState, useRef } from "react";
 import { View, Dimensions } from "react-native";
 import Scanner, { RectangleOverlay } from "react-native-rectangle-scanner";
+import { withNavigationFocus } from "react-navigation";
 import PropTypes from "prop-types";
 console.log(!!PropTypes);
 
-
-
-export const DocumentScanner = ({saveImageAction, uriAttribute}) => {
+const DocumentScannerComponent = ({
+    saveImageAction,
+    uriAttribute,
+    uriAttributeUncropped,
+    thresholdExpr,
+    isFocused
+}) => {
     const camera = useRef();
     const [rectangleDetected, setRectangleDetected] = useState(null);
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
-    const [pictureProcessing, setPictureProcessing] = useState(false);
+
+    const threshold = thresholdExpr.value.toNumber() || 2000; // only take maximum of one picture every 1s
 
     const getPreviewSize = () => {
         const dimensions = Dimensions.get("window");
@@ -40,19 +46,17 @@ export const DocumentScanner = ({saveImageAction, uriAttribute}) => {
         };
     };
     const takePicture = () => {
-        if (pictureProcessing) return;
         camera.current.capture();
     };
-    const handlePictureTaken = () => {
-        setPictureProcessing(true);
-    }
+    // const handlePictureTaken = () => {
+    //     //something?
+    // };
     const handlePictureProcessed = data => {
-        console.log("picture taken");
-        // {"target":17,"croppedImage":"/var/mobile/Containers/Data/Application/BFCECCEC-169C-473E-9197-378DABF7709F/Library/Caches/RNRectangleScanner/C1655241717.jpeg","initialImage":"/var/mobile/Containers/Data/Application/BFCECCEC-169C-473E-9197-378DABF7709F/Library/Caches/RNRectangleScanner/O1655241717.jpeg"}
-        console.log(data);
         uriAttribute.setValue(data.croppedImage);
-        saveImageAction.execute();
-        setPictureProcessing(false);
+        uriAttributeUncropped.setValue(data.initialImage);
+        if (saveImageAction.canExecute && !saveImageAction.isExecuting) {
+            saveImageAction.execute();
+        }
     };
     const handleRectangleDetected = ({ detectedRectangle }) => {
         if (!detectedRectangle) return;
@@ -64,11 +68,10 @@ export const DocumentScanner = ({saveImageAction, uriAttribute}) => {
         setWidth(width);
     };
 
-    return (
+    return isFocused ? (
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0)", position: "relative" }} onLayout={handleLayoutChange}>
             <Scanner
                 onPictureProcessed={handlePictureProcessed}
-                onPictureTaken={handlePictureTaken}
                 style={{ flex: 1 }}
                 onRectangleDetected={handleRectangleDetected}
                 ref={camera}
@@ -85,5 +88,6 @@ export const DocumentScanner = ({saveImageAction, uriAttribute}) => {
                 />
             ) : null}
         </View>
-    );
+    ) : null;
 };
+export const DocumentScanner = withNavigationFocus(DocumentScannerComponent);
