@@ -1,5 +1,5 @@
 ## DocumentScanner
-[Mendix wrapper around https://github.com/Michaelvilleneuve/react-native-document-scanner]
+Mendix wrapper around [https://github.com/HarvestProfit/react-native-rectangle-scanner](https://github.com/HarvestProfit/react-native-rectangle-scanner)
 
 ## Features
 [feature highlights]
