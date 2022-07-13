@@ -26,6 +26,13 @@
                 <attributeType name="String" />
               </attributeTypes>
             </property>
+            <property key="rectangleCoordsAttribute" type="attribute" required="false">
+              <caption>Rectangle Coords</caption>
+              <description>Where the rectangle was found in the image (so it can be passed to the manual crop widget.</description>
+              <attributeTypes>
+                <attributeType name="String" />
+              </attributeTypes>
+            </property>
         </propertyGroup>
     </properties>
 </widget>

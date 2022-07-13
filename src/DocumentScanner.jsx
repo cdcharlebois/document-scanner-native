@@ -1,11 +1,11 @@
 import { Component, createElement, useState, useRef } from "react";
-import { View, Dimensions, Animated } from "react-native";
+import { View, Dimensions, Animated, TouchableOpacity, Platform } from "react-native";
 import Scanner, { RectangleOverlay, FlashAnimation } from "react-native-rectangle-scanner";
 import { withNavigationFocus } from "react-navigation";
 import PropTypes from "prop-types";
 console.log(!!PropTypes);
 
-const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeUncropped, isFocused }) => {
+const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeUncropped, rectangleCoordsAttribute, isFocused }) => {
     const camera = useRef();
     const [rectangleDetected, setRectangleDetected] = useState(null);
     const [width, setWidth] = useState(0);
@@ -44,18 +44,20 @@ const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeU
     };
     const triggerFlashAnimation = () => {
         Animated.sequence([
-            Animated.timing(flashOpacity, { toValue: 0.7, duration: 100, useNativeDriver:true }),
-            Animated.timing(flashOpacity, { toValue: 0, duration: 50, useNativeDriver:true }),
-            Animated.timing(flashOpacity, { toValue: 0.5, delay: 100, duration: 120, useNativeDriver:true }),
-            Animated.timing(flashOpacity, { toValue: 0, duration: 90, useNativeDriver:true })
+            Animated.timing(flashOpacity, { toValue: 0.7, duration: 100, useNativeDriver: true }),
+            Animated.timing(flashOpacity, { toValue: 0, duration: 50, useNativeDriver: true }),
+            Animated.timing(flashOpacity, { toValue: 0.5, delay: 100, duration: 120, useNativeDriver: true }),
+            Animated.timing(flashOpacity, { toValue: 0, duration: 90, useNativeDriver: true })
         ]).start();
     };
     // const handlePictureTaken = () => {
     //     //something?
     // };
     const handlePictureProcessed = data => {
+        console.warn(JSON.stringify(rectangleDetected));
         uriAttribute.setValue(data.croppedImage);
         uriAttributeUncropped.setValue(data.initialImage);
+        rectangleCoordsAttribute.setValue(JSON.stringify(rectangleDetected));
         if (saveImageAction.canExecute && !saveImageAction.isExecuting) {
             saveImageAction.execute();
         }
@@ -69,14 +71,23 @@ const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeU
         setHeight(height);
         setWidth(width);
     };
+    const handleDeviceSetup = ({ previewHeightPercent, previewWidthPercent }) => {
+        // if (Platform.OS === "android") {
+        //     const dimensions = Dimensions.get("window");
+        //     console.warn(`hpct: ${previewHeightPercent}, wpct: ${previewWidthPercent}`);
+        //     setHeight(previewHeightPercent * dimensions.height);
+        //     setWidth(previewWidthPercent * dimensions.width);
+        // }
+    };
 
     return isFocused ? (
-        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0)", position: "relative" }} onLayout={handleLayoutChange}>
+        <TouchableOpacity onPress={takePicture}  style={{ flex: 1, backgroundColor: "rgba(0,0,0,0)", position: "relative" }} onLayout={handleLayoutChange}>
             <Scanner
                 onPictureProcessed={handlePictureProcessed}
                 style={{ flex: 1 }}
                 onRectangleDetected={handleRectangleDetected}
                 ref={camera}
+                onDeviceSetup={handleDeviceSetup}
             />
             {rectangleDetected ? (
                 <RectangleOverlay
@@ -90,7 +101,7 @@ const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeU
                 />
             ) : null}
             <FlashAnimation overlayFlashOpacity={flashOpacity} />
-        </View>
+        </TouchableOpacity>
     ) : null;
 };
 export const DocumentScanner = withNavigationFocus(DocumentScannerComponent);
