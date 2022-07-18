@@ -1,5 +1,5 @@
 import { Component, createElement, useState, useRef } from "react";
-import { View, Dimensions, Animated } from "react-native";
+import { View, Dimensions, Animated, Button } from "react-native";
 import Scanner, { RectangleOverlay, FlashAnimation } from "react-native-rectangle-scanner";
 import { withNavigationFocus } from "react-navigation";
 import PropTypes from "prop-types";
@@ -90,6 +90,11 @@ const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeU
                 />
             ) : null}
             <FlashAnimation overlayFlashOpacity={flashOpacity} />
+            <Button
+                onclick="takePicture()"
+                title="Take Picture"
+            >
+            </Button>
         </View>
     ) : null;
 };
