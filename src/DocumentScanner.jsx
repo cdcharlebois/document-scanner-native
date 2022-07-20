@@ -1,11 +1,17 @@
 import { Component, createElement, useState, useRef, useEffect } from "react";
-import { View, Dimensions, Animated, TouchableOpacity, Platform } from "react-native";
+import { View, Dimensions, Animated, TouchableOpacity, Platform, Button } from "react-native";
 import Scanner, { RectangleOverlay, FlashAnimation } from "react-native-rectangle-scanner";
 import { withNavigationFocus } from "react-navigation";
 import PropTypes from "prop-types";
 console.log(!!PropTypes);
 
-const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeUncropped, rectangleCoordsAttribute, isFocused }) => {
+const DocumentScannerComponent = ({
+    saveImageAction,
+    uriAttribute,
+    uriAttributeUncropped,
+    rectangleCoordsAttribute,
+    isFocused
+}) => {
     const camera = useRef();
     const [rectangleDetected, setRectangleDetected] = useState(null);
     const [width, setWidth] = useState(0);
@@ -14,33 +20,32 @@ const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeU
     const [previewSize, setPreviewSize] = useState(null);
 
     useEffect(() => {
-        setPreviewSize(getPreviewSize())
-    }, [width, height])
+        setPreviewSize(getPreviewSize());
+    }, [height, width]);
 
     const getPreviewSize = () => {
         const dimensions = Dimensions.get("window");
+        const screenRatio = dimensions.height / dimensions.width;
+        // const screenRatio = 4/3;
         const previewHeightPercent = height / dimensions.height;
         const previewWidthPercent = width / dimensions.width;
-        const screenRatio = dimensions.height / dimensions.width;
 
-        // console.warn(`Window Height: ${dimensions.height}`)
-        // console.warn(`Window Width: ${dimensions.width}`)
-        // console.warn(`Screen Ratio: ${screenRatio}`)
-        // console.warn(`Layout Height: ${height}`)
-        // console.warn(`Layout Width: ${width}`)
-        // console.warn(`Layout Height Percent: ${previewHeightPercent}`)
-        // console.warn(`Layout Width Percent: ${previewWidthPercent}`)
-
-        
+        // console.warn(`Window Height: ${dimensions.height}`);
+        // console.warn(`Window Width: ${dimensions.width}`);
+        // console.warn(`Screen Ratio: ${screenRatio}`);
+        // console.warn(`Layout Height: ${height}`);
+        // console.warn(`Layout Width: ${width}`);
+        // console.warn(`Layout Height Percent: ${previewHeightPercent}`);
+        // console.warn(`Layout Width Percent: ${previewWidthPercent}`);
 
         // We use set margin amounts because for some reasons the percentage values don't align the camera preview in the center correctly.
         const heightMargin = ((1 - previewHeightPercent) * height) / 2;
-        
+
         // android devices need some padding to fix/unskew the camera preview. iOS handles this gracefully, so no margin is needed.
         const expectedWidth = height / screenRatio;
-        const widthMargin = Platform.OS === "android" ? (dimensions.width - expectedWidth) / 2 : 0 // changed; function of height to maintain aspect ratio
+        const widthMargin = Platform.OS === "android" ? (dimensions.width - expectedWidth) / 2 : 0; // changed; function of height to maintain aspect ratio
         // const widthMargin = ((1 - previewWidthPercent) * width) / 2; // original
-        
+
         // console.warn(`Height Margin: ${heightMargin}`)
         // console.warn(`Width Margin: ${widthMargin}`)
         if (dimensions.height > dimensions.width) {
@@ -104,27 +109,40 @@ const DocumentScannerComponent = ({ saveImageAction, uriAttribute, uriAttributeU
     };
 
     return isFocused && previewSize !== null ? (
-        <TouchableOpacity onPress={takePicture}  style={{ flex: 1, backgroundColor: "rgba(0,0,0,0)", position: "relative", marginLeft: previewSize.marginLeft, marginRight: previewSize.marginLeft }} onLayout={handleLayoutChange}>
-            <Scanner
-                onPictureProcessed={handlePictureProcessed}
-                style={{ flex: 1 }}
-                onRectangleDetected={handleRectangleDetected}
-                ref={camera}
-                onDeviceSetup={handleDeviceSetup}
-            />
-            {rectangleDetected ? (
-                <RectangleOverlay
-                    detectedRectangle={rectangleDetected}
-                    backgroundColor="rgba(255,181,6,0.2)"
-                    borderColor="tomato"
-                    borderWidth="4"
-                    previewRatio={previewSize}
-                    allowDetection={true}
-                    // onDetectedCapture={takePicture}
+        <View style={{flex:1}}>
+            <TouchableOpacity
+                onPress={takePicture}
+                style={{
+                    flex: 1,
+                    backgroundColor: "rgba(0,0,0,0)",
+                    position: "relative",
+                    marginLeft: previewSize.marginLeft,
+                    marginRight: previewSize.marginLeft
+                }}
+                onLayout={handleLayoutChange}
+            >
+                <Scanner
+                    onPictureProcessed={handlePictureProcessed}
+                    style={{ flex: 1 }}
+                    onRectangleDetected={handleRectangleDetected}
+                    ref={camera}
+                    onDeviceSetup={handleDeviceSetup}
                 />
-            ) : null}
-            <FlashAnimation overlayFlashOpacity={flashOpacity} />
-        </TouchableOpacity>
+                {rectangleDetected ? (
+                    <RectangleOverlay
+                        detectedRectangle={rectangleDetected}
+                        backgroundColor="rgba(255,181,6,0.2)"
+                        borderColor="tomato"
+                        borderWidth="4"
+                        previewRatio={previewSize}
+                        allowDetection={true}
+                        // onDetectedCapture={takePicture}
+                    />
+                ) : null}
+                <FlashAnimation overlayFlashOpacity={flashOpacity} />
+            </TouchableOpacity>
+            <Button title="Take Picture" onPress={takePicture} />
+        </View>
     ) : null;
 };
 export const DocumentScanner = withNavigationFocus(DocumentScannerComponent);
